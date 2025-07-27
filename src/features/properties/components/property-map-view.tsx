@@ -1,5 +1,12 @@
 import { useEffect, useRef } from "react";
 
+// Type declaration for Leaflet
+declare global {
+  interface Window {
+    L: any;
+  }
+}
+
 interface PropertyMapViewProps {
   lat: number;
   lng: number;
@@ -12,11 +19,11 @@ export default function PropertyMapView({ lat, lng }: PropertyMapViewProps) {
   useEffect(() => {
     if (
       typeof window !== "undefined" &&
-      (window as any).L &&
+      window.L &&
       mapRef.current &&
       !mapInstanceRef.current
     ) {
-      const L = (window as any).L;
+      const L = window.L;
       mapInstanceRef.current = L.map(mapRef.current, {
         center: [lat, lng],
         zoom: 15,

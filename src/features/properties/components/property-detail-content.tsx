@@ -15,7 +15,6 @@ import {
   Bath,
   Ruler,
   Calendar,
-  Globe2,
   MessageCircle,
 } from "lucide-react";
 import dynamic from "next/dynamic";

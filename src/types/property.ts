@@ -1,7 +1,7 @@
 import type { BaseEntity, PaginatedResponse } from "./common";
 
 export interface Property extends BaseEntity {
-  features: any;
+  features: number[];
   imageUrls: never[];
   title: string;
   description: string;
