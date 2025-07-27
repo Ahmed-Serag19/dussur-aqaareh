@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/hooks/useLanguage";
-import { Button } from "@/components/ui/button";
+
 import Link from "next/link";
 
 export function HeroContent() {

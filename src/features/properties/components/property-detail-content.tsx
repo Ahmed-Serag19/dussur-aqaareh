@@ -48,7 +48,7 @@ export function PropertyDetailContent({ propertyId }: { propertyId: number }) {
         const maxPages = 10;
         while (!found && page < maxPages) {
           const data = await getPublicProperties(page, 10);
-          found = data.content.find((p: any) => p.id === propertyId);
+          found = data.content.find((p) => p.id === propertyId);
           if (found) break;
           if (data.last) break;
           page++;
@@ -263,7 +263,7 @@ ${t("property.contactMessage")}`;
             </div>
             <div className="flex flex-wrap gap-3 mb-4 text-lg">
               {Array.isArray(property.features) &&
-                property.features.map((featureId: any) => (
+                property.features.map((featureId: number) => (
                   <Badge
                     key={featureId}
                     variant="secondary"

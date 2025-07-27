@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Providers } from "./providers";
 
-const cairo = Cairo({ subsets: ["arabic", "latin"] });
+const cairoFont = Cairo({ subsets: ["arabic", "latin"] });
 
 export const metadata: Metadata = {
   title: {
@@ -87,6 +87,7 @@ export default function RootLayout({
           src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-o9N1jRVv6G8z1p3pXtM="
           crossOrigin=""
+          async
         ></script>
         <script
           type="application/ld+json"
@@ -123,7 +124,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-cairo antialiased min-h-screen flex flex-col">
+      <body
+        className={`${cairoFont.className} antialiased min-h-screen flex flex-col`}
+      >
         <Providers>
           <Header />
           <main className="flex-1 flex flex-col">{children}</main>

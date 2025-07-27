@@ -19,7 +19,7 @@ export async function generateMetadata({
 
     while (!property && page < maxPages) {
       const data = await getPublicProperties(page, 10);
-      property = data.content.find((p: any) => p.id === Number.parseInt(id));
+      property = data.content.find((p) => p.id === Number.parseInt(id));
       if (property) break;
       if (data.last) break;
       page++;

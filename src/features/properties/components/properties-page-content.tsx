@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useProperties } from "../hooks/useProperties";
 import { PropertiesSection } from "@/features/properties/components/properties-section";
 import { PropertyFiltersComponent } from "./property-filters";
-import type { PropertyFilters as PropertyFiltersType } from "@/types/property";
+import type {
+  PropertyFilters as PropertyFiltersType,
+  Property,
+} from "@/types/property";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Filter, X } from "lucide-react";
@@ -27,7 +30,7 @@ export function PropertiesPageContent() {
   } = useProperties(filters);
 
   const allProperties =
-    data?.pages.flatMap((page: { content: any }) => page.content) ?? [];
+    data?.pages.flatMap((page: { content: Property[] }) => page.content) ?? [];
 
   const currentPage = data?.pages.length ? data.pages.length - 1 : 0;
 
