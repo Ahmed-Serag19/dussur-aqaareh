@@ -86,7 +86,7 @@ export function PropertyFiltersComponent({
       if (value === "" || value === null || value === undefined) {
         delete newFilters[key];
       } else {
-        newFilters[key] = value;
+        newFilters[key] = value as any;
       }
       console.log("📝 Setting other filter:", key, newFilters[key]);
     }
