@@ -14,7 +14,7 @@ interface PropertyMapViewProps {
 
 export default function PropertyMapView({ lat, lng }: PropertyMapViewProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
+  const mapInstanceRef = useRef<unknown>(null);
 
   useEffect(() => {
     if (
@@ -36,8 +36,13 @@ export default function PropertyMapView({ lat, lng }: PropertyMapViewProps) {
       L.marker([lat, lng]).addTo(mapInstanceRef.current);
     }
     return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
+      if (
+        mapInstanceRef.current &&
+        typeof mapInstanceRef.current === "object" &&
+        mapInstanceRef.current !== null &&
+        "remove" in mapInstanceRef.current
+      ) {
+        (mapInstanceRef.current as { remove: () => void }).remove();
         mapInstanceRef.current = null;
       }
     };

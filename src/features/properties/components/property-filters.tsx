@@ -46,7 +46,10 @@ export function PropertyFiltersComponent({
     currentFilters: filters,
   });
 
-  const handleFilterChange = (key: keyof PropertyFilters, value: any) => {
+  const handleFilterChange = (
+    key: keyof PropertyFilters,
+    value: string | number | undefined
+  ) => {
     console.log("🔄 Filter change:", key, value);
 
     const newFilters = { ...filters };
@@ -55,28 +58,28 @@ export function PropertyFiltersComponent({
       if (value === "all" || value === "" || !value) {
         delete newFilters.regionId;
       } else {
-        newFilters.regionId = Number.parseInt(value);
+        newFilters.regionId = Number.parseInt(value as string);
       }
       console.log("🌍 Setting region ID:", newFilters.regionId);
     } else if (key === "listingType") {
       if (value === "all" || value === "" || !value) {
         delete newFilters.listingType;
       } else {
-        newFilters.listingType = value; // Keep as string ID
+        newFilters.listingType = value as string; // Keep as string ID
       }
       console.log("📋 Setting listing type:", newFilters.listingType);
     } else if (key === "propertyType") {
       if (value === "all" || value === "" || !value) {
         delete newFilters.propertyType;
       } else {
-        newFilters.propertyType = Number.parseInt(value);
+        newFilters.propertyType = Number.parseInt(value as string);
       }
       console.log("🏠 Setting property type:", newFilters.propertyType);
     } else if (key === "minPrice" || key === "maxPrice") {
       if (value === "" || value === null || value === undefined) {
         delete newFilters[key];
       } else {
-        newFilters[key] = Number.parseInt(value);
+        newFilters[key] = Number.parseInt(value as string);
       }
       console.log(`💰 Setting ${key}:`, newFilters[key]);
     } else {
