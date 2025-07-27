@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface ImageCarouselProps {
   images: string[];
@@ -48,11 +49,13 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
   return (
     <div className={`relative w-full aspect-[4/3] ${className}`}>
-      <img
+      <Image
         src={images[current]}
         alt={`${altPrefix} ${current + 1}`}
-        className="w-full h-full object-cover rounded-t-lg transition-all duration-500"
-        loading="lazy"
+        fill
+        className="object-cover rounded-t-lg transition-all duration-500"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        priority={current === 0}
       />
       {images.length > 1 && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
