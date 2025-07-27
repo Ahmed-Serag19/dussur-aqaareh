@@ -24,6 +24,8 @@ export interface Property extends BaseEntity {
   livingroomsCount: number;
   floorsCount: number;
   buildingAge: number;
+  latitude: number;
+  longitude: number;
   images?: PropertyImage[];
 }
 

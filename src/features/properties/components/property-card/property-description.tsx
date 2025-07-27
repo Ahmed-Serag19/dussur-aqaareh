@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/hooks/useLanguage";
-import type { Property } from "@/features/properties/types";
+import type { Property } from "@/types/property";
 
 interface PropertyDescriptionProps {
   property: Property;

@@ -112,10 +112,7 @@ ${t("common.price")}: ${formatNumber(property.price, "ar-SA")} ${t(
           )}
 ${t("property.city")}: ${getCityName(property.cityId)}
 ${t("property.region")}: ${getRegionName(property.regionId)}
-${t("property.neighborhood")}: ${
-            property.neighborhoodAr ||
-            getNeighborhoodName(property.neighborhoodId)
-          }
+${t("property.neighborhood")}: ${getNeighborhoodName(property.neighborhoodId)}
 
 ${t("property.propertyLink")}: ${propertyUrl}
 
@@ -128,10 +125,7 @@ ${t("common.price")}: ${formatNumber(property.price, "en-US")} ${t(
           )}
 ${t("property.city")}: ${getCityName(property.cityId)}
 ${t("property.region")}: ${getRegionName(property.regionId)}
-${t("property.neighborhood")}: ${
-            property.neighborhoodEn ||
-            getNeighborhoodName(property.neighborhoodId)
-          }
+${t("property.neighborhood")}: ${getNeighborhoodName(property.neighborhoodId)}
 
 ${t("property.propertyLink")}: ${propertyUrl}
 
@@ -207,11 +201,7 @@ ${t("property.contactMessage")}`;
                 className="bg-blue-50 text-blue-900 border-blue-200 text-lg px-4 py-2"
               >
                 {t("property.neighborhood")}:{" "}
-                {currentLanguage === "ar"
-                  ? property.neighborhoodAr ||
-                    getNeighborhoodName(property.neighborhoodId)
-                  : property.neighborhoodEn ||
-                    getNeighborhoodName(property.neighborhoodId)}
+                {getNeighborhoodName(property.neighborhoodId)}
               </Badge>
               <Badge
                 variant="secondary"
@@ -219,8 +209,8 @@ ${t("property.contactMessage")}`;
               >
                 {t("property.street")}:{" "}
                 {currentLanguage === "ar"
-                  ? property.streetAr || property.street
-                  : property.streetEn || property.street}
+                  ? property.streetAr
+                  : property.streetEn}
               </Badge>
               <button
                 className="flex items-center gap-2 text-blue-700 underline text-lg px-4 py-2"
