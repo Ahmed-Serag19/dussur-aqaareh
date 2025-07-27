@@ -30,11 +30,7 @@ class HttpClient {
         // if (token) {
         //   config.headers.Authorization = `Bearer ${token}`
         // }
-        console.log(
-          "🚀 API Request:",
-          config.method?.toUpperCase(),
-          config.url
-        );
+       
         return config;
       },
       (error) => {
@@ -46,12 +42,6 @@ class HttpClient {
     // Response interceptor
     this.instance.interceptors.response.use(
       (response) => {
-        console.log(
-          "✅ API Response:",
-          response.status,
-          response.config.url,
-          response.data
-        );
         return response;
       },
       (error) => {

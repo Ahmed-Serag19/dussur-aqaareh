@@ -17,9 +17,6 @@ export function PropertiesPageContent() {
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
 
-  // Debug: Log filters to console
-  console.log("Applied filters:", filters);
-
   const {
     data,
     error,
@@ -27,7 +24,7 @@ export function PropertiesPageContent() {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-  } = useProperties(filters);
+  } = useProperties();
 
   const allProperties =
     data?.pages.flatMap((page: { content: Property[] }) => page.content) ?? [];
@@ -95,13 +92,6 @@ export function PropertiesPageContent() {
     : undefined;
 
   const handleFiltersChange = (newFilters: PropertyFiltersType) => {
-    console.log("🎯 Client-side filters changed:", newFilters);
-    console.log("🔍 Client-side filtering active:", hasActiveFilters);
-    console.log("📊 Total cached properties:", allProperties.length);
-    console.log(
-      "📊 Properties after client-side filtering:",
-      filteredProperties.length
-    );
     setFilters(newFilters);
   };
 

@@ -1,4 +1,5 @@
 "use client";
+
 import { useLanguage } from "@/hooks/useLanguage";
 import { useLookupData } from "@/hooks/useLookupData";
 import { Button } from "@/components/ui/button";
@@ -38,66 +39,48 @@ export function PropertyFiltersComponent({
     propertyTypesError,
   } = useLookupData();
 
-  // Debug: Log what data we're actually using
-  console.log("🎯 Property Filters Debug:", {
-    regions: { count: regions.length, data: regions },
-    listingTypes: { count: listingTypes.length, data: listingTypes },
-    propertyTypes: { count: propertyTypes.length, data: propertyTypes },
-    currentFilters: filters,
-  });
-
   const handleFilterChange = (
     key: keyof PropertyFilters,
     value: string | number | undefined
   ) => {
-    console.log("🔄 Filter change:", key, value);
-
     const newFilters = { ...filters };
-
     if (key === "regionId") {
       if (value === "all" || value === "" || !value) {
         delete newFilters.regionId;
       } else {
         newFilters.regionId = Number.parseInt(value as string);
       }
-      console.log("🌍 Setting region ID:", newFilters.regionId);
     } else if (key === "listingType") {
       if (value === "all" || value === "" || !value) {
         delete newFilters.listingType;
       } else {
         newFilters.listingType = value as string; // Keep as string ID
       }
-      console.log("📋 Setting listing type:", newFilters.listingType);
     } else if (key === "propertyType") {
       if (value === "all" || value === "" || !value) {
         delete newFilters.propertyType;
       } else {
         newFilters.propertyType = Number.parseInt(value as string);
       }
-      console.log("🏠 Setting property type:", newFilters.propertyType);
     } else if (key === "minPrice" || key === "maxPrice") {
       if (value === "" || value === null || value === undefined) {
         delete newFilters[key];
       } else {
         newFilters[key] = Number.parseInt(value as string);
       }
-      console.log(`💰 Setting ${key}:`, newFilters[key]);
     } else {
       if (value === "" || value === null || value === undefined) {
         delete newFilters[key];
       } else {
-        newFilters[key] = value as any;
+        // Type-safe assignment for other filter properties
+        (newFilters as Record<string, unknown>)[key] = value;
       }
-      console.log("📝 Setting other filter:", key, newFilters[key]);
     }
 
-    // Apply filters immediately
-    console.log("🚀 Applying new filters:", newFilters);
     onFiltersChange(newFilters);
   };
 
   const handleClearFilters = () => {
-    console.log("🧹 Clearing all filters");
     onFiltersChange({});
   };
 
@@ -355,7 +338,7 @@ export function PropertyFiltersComponent({
                 <div className="text-xs text-gray-600">
                   {t("filters.listingType")}:{" "}
                   {(() => {
-                    const listingTypeId = parseInt(filters.listingType);
+                    const listingTypeId = Number.parseInt(filters.listingType);
                     const listingType = validListingTypes.find(
                       (t) => t.id === listingTypeId
                     );

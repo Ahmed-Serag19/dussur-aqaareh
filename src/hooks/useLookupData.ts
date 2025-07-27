@@ -134,65 +134,6 @@ export function useLookupData() {
     retryDelay: 2000,
   });
 
-  // Debug logging
-  console.log("🔍 Lookup Data Debug:", {
-    regions: {
-      count: regions.length,
-      data: regions,
-      loading: regionsLoading,
-      error: regionsError,
-      mapping: regions.map((r) => ({
-        id: r.id,
-        nameAr: r.nameAr,
-        nameEn: r.nameEn,
-      })),
-    },
-    propertyTypes: {
-      count: propertyTypes.length,
-      data: propertyTypes,
-      loading: propertyTypesLoading,
-      error: propertyTypesError,
-      mapping: propertyTypes.map((pt) => ({
-        id: pt.id,
-        nameAr: pt.nameAr,
-        nameEn: pt.nameEn,
-      })),
-    },
-    listingTypes: {
-      count: listingTypes.length,
-      data: listingTypes,
-      loading: listingTypesLoading,
-      error: listingTypesError,
-      mapping: listingTypes.map((lt) => ({
-        id: lt.id,
-        nameAr: lt.nameAr,
-        nameEn: lt.nameEn,
-      })),
-    },
-    cities: {
-      count: cities.length,
-      data: cities,
-      loading: citiesLoading,
-      error: citiesError,
-      mapping: cities.map((c) => ({
-        id: c.id,
-        nameAr: c.nameAr,
-        nameEn: c.nameEn,
-      })),
-    },
-    neighborhoods: {
-      count: neighborhoods.length,
-      data: neighborhoods,
-      loading: neighborhoodsLoading,
-      error: neighborhoodsError,
-      mapping: neighborhoods.map((n) => ({
-        id: n.id,
-        nameAr: n.nameAr,
-        nameEn: n.nameEn,
-      })),
-    },
-  });
-
   // Helper function to get name based on current language
   const getName = (item: LookupItem | undefined) => {
     if (!item) return "";
@@ -248,9 +189,7 @@ export function useLookupData() {
   // Functions to fetch cascading data for filters
   const fetchCitiesByRegion = async (regionId: number) => {
     try {
-      console.log("🌍 Fetching cities for region:", regionId);
       const citiesData = await lookupApi.getCitiesByRegion(regionId);
-      console.log("✅ Cities data received:", citiesData);
       return citiesData;
     } catch (error) {
       console.error("❌ Error fetching cities:", error);
@@ -260,9 +199,7 @@ export function useLookupData() {
 
   const fetchNeighborhoodsByCity = async (cityId: number) => {
     try {
-      console.log("🏙️ Fetching neighborhoods for city:", cityId);
       const neighborhoodsData = await lookupApi.getNeighborhoodsByCity(cityId);
-      console.log("✅ Neighborhoods data received:", neighborhoodsData);
       return neighborhoodsData;
     } catch (error) {
       console.error("❌ Error fetching neighborhoods:", error);

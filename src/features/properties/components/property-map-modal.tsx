@@ -1,10 +1,13 @@
-import { Dialog } from "@/components/ui/dialog";
-import dynamic from "next/dynamic";
-import { X } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useLanguage } from "@/hooks/useLanguage";
+"use client";
 
-const Map = dynamic(() => import("./property-map-view"), { ssr: false });
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface PropertyMapModalProps {
   open: boolean;
@@ -27,60 +30,101 @@ export default function PropertyMapModal({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !lat || !lng) return;
+
     setAddress("");
     setError("");
     setLoading(true);
+
     const lang = currentLanguage === "ar" ? "ar" : "en";
-    fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=${lang}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.display_name) {
-          setAddress(data.display_name);
-        } else {
-          setAddress("");
+
+    // Add a small delay to ensure the modal is fully rendered
+    const timer = setTimeout(() => {
+      fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=${lang}`
+      )
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data.display_name) {
+            setAddress(data.display_name);
+          } else {
+            setAddress("");
+            setError(
+              lang === "ar" ? "لا يوجد عنوان متاح" : "No address available"
+            );
+          }
+        })
+        .catch((err) => {
+          console.error("Address fetch error:", err);
           setError(
-            lang === "ar" ? "لا يوجد عنوان متاح" : "No address available"
+            lang === "ar"
+              ? "حدث خطأ أثناء جلب العنوان"
+              : "Error fetching address"
           );
-        }
-      })
-      .catch(() => {
-        setError(
-          lang === "ar" ? "حدث خطأ أثناء جلب العنوان" : "Error fetching address"
-        );
-      })
-      .finally(() => setLoading(false));
+        })
+        .finally(() => setLoading(false));
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [open, lat, lng, currentLanguage]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-        <div className="bg-white rounded-xl shadow-lg p-6 max-w-lg w-full relative">
-          <button
-            onClick={onClose}
-            className="absolute top-4 left-4 text-gray-500 hover:text-gray-900"
-          >
-            <X className="w-6 h-6" />
-          </button>
-          <h2 className="text-2xl font-bold mb-4 text-blue-950 text-center">
+      <DialogContent className="max-w-2xl w-full max-h-[90vh] p-0 bg-white shadow-xl rounded-2xl">
+        <DialogHeader className="p-6 pb-4">
+          <DialogTitle className="text-2xl font-bold text-blue-950 text-center pr-8">
             {title}
-          </h2>
-          <div className="w-full h-64 rounded-lg overflow-hidden mb-4">
-            <Map lat={lat} lng={lng} />
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="px-6 pb-6">
+          {/* Map Container */}
+          <div className="w-full h-80 rounded-lg overflow-hidden mb-4 bg-gray-200 border border-gray-300 shadow-md">
+            {open && lat && lng ? (
+              <iframe
+                src={`https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`}
+                width="100%"
+                height="100%"
+                style={{ border: 0, borderRadius: 12, minHeight: 320 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="خريطة الموقع"
+              ></iframe>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-500">
+                {currentLanguage === "ar"
+                  ? "لا يمكن عرض الخريطة"
+                  : "Map cannot be displayed"}
+              </div>
+            )}
           </div>
-          <div className="text-center text-lg min-h-[2.5em]">
-            {loading
-              ? currentLanguage === "ar"
-                ? "جاري جلب العنوان..."
-                : "Loading address..."
-              : error
-              ? error
-              : address}
+
+          {/* Address Display */}
+          <div className="text-center text-lg min-h-[2.5em] p-4 bg-gray-50 rounded-lg">
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                {currentLanguage === "ar"
+                  ? "جاري جلب العنوان..."
+                  : "Loading address..."}
+              </div>
+            ) : error ? (
+              <div className="text-red-500">{error}</div>
+            ) : (
+              <div className="text-gray-700">
+                {address ||
+                  (currentLanguage === "ar" ? "لا يوجد عنوان" : "No address")}
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </DialogContent>
     </Dialog>
   );
 }

@@ -302,7 +302,7 @@ ${t("property.contactMessage")}`;
               }`}
             >
               <MessageCircle className="w-5 h-5" />
-              {t("property.contactOwner")} 💬
+              {t("property.contactOwner")}
             </button>
           </div>
         </div>

@@ -1,1 +1,1 @@
-export { PropertyService } from "./property.service"
+export { PropertyService } from "@/services/property.service";

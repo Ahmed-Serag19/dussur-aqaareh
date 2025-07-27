@@ -77,18 +77,6 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <head>
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-sA+e2tu6pJg1jzGmbt8Q1qkQb6l1p2U5r3l2Qp3pXtM="
-          crossOrigin=""
-        />
-        <script
-          src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-          integrity="sha256-o9N1jRVv6G8z1p3pXtM="
-          crossOrigin=""
-          async
-        ></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
