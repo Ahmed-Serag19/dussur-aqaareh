@@ -1,6 +1,12 @@
 import type { Language } from "@/types/common";
 
-export const translations: Record<Language, Record<string, any>> = {
+// Recursive type for translation values
+export type TranslationValue = string | { [key: string]: TranslationValue };
+
+export const translations: Record<
+  Language,
+  Record<string, TranslationValue>
+> = {
   ar: {
     common: {
       search: "بحث",
@@ -113,24 +119,24 @@ export const translations: Record<Language, Record<string, any>> = {
       phone: "الهاتف",
       email: "البريد الإلكتروني",
       copyright: "جميع الحقوق محفوظة",
-      servicesList: [
-        {
+      servicesList: {
+        apartments: {
           title: "تأجير الشقق",
           description: "نوفر شقق للإيجار بمواقع مميزة وأسعار تنافسية.",
         },
-        {
+        villas: {
           title: "تأجير الفلل",
           description: "فلل فاخرة للإيجار تناسب جميع الاحتياجات.",
         },
-        {
-          title: "تأجير المحلات ",
+        shops: {
+          title: "تأجير المحلات",
           description: "محلات تجارية للإيجار في أفضل المواقع.",
         },
-        {
+        lands: {
           title: "تأجير الأراضي",
           description: "أراضي للإيجار بمساحات متنوعة.",
         },
-      ],
+      },
     },
   },
   en: {
@@ -246,25 +252,25 @@ export const translations: Record<Language, Record<string, any>> = {
       phone: "Phone",
       email: "Email",
       copyright: "All rights reserved",
-      servicesList: [
-        {
+      servicesList: {
+        apartments: {
           title: "Apartment Rentals",
           description:
             "We offer apartments for rent in prime locations at competitive prices.",
         },
-        {
+        villas: {
           title: "Villa Rentals",
           description: "Luxury villas for rent to suit all needs.",
         },
-        {
+        shops: {
           title: "Shop Rentals",
           description: "Commercial shops for rent in the best locations.",
         },
-        {
+        lands: {
           title: "Land Rentals",
           description: "Lands for rent in various sizes.",
         },
-      ],
+      },
     },
   },
 };
