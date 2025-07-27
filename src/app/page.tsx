@@ -116,7 +116,7 @@ function ContactForm() {
       } else {
         setError(data.message || "حدث خطأ أثناء إرسال الرسالة. حاول مرة أخرى.");
       }
-    } catch (err) {
+    } catch {
       setError("حدث خطأ أثناء إرسال الرسالة. حاول مرة أخرى.");
     } finally {
       setLoading(false);
