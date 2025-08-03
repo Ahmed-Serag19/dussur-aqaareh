@@ -25,6 +25,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import dynamic from "next/dynamic";
+import type { LookupItem } from "@/types/property";
 
 const MapModal = dynamic(() => import("./property-map-modal"), { ssr: false });
 
@@ -40,7 +41,7 @@ export function PropertyDetailContent({ propertyId }: { propertyId: number }) {
   const { data: listingTypes = [] } = useListingTypes();
 
   // Helper function to get name based on current language
-  const getName = (item: any) => {
+  const getName = (item: LookupItem | undefined) => {
     if (!item) return "";
     return currentLanguage === "ar" ? item.nameAr : item.nameEn;
   };

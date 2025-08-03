@@ -15,14 +15,14 @@ dussur-alaqareeh/
 ├── src/
 │   ├── app/                    # Next.js App Router
 │   ├── components/             # Reusable UI components
-│   ├── features/              # Feature-based modules
-│   ├── hooks/                 # Custom React hooks
-│   ├── lib/                   # Utilities and configurations
-│   ├── types/                 # TypeScript type definitions
-│   └── styles/                # Global styles and themes
-├── public/                    # Static assets
-├── scripts/                   # Build and utility scripts
-└── docs/                      # Documentation
+│   ├── features/               # Feature-based modules
+│   ├── hooks/                  # Custom React hooks
+│   ├── lib/                    # Utilities and configurations
+│   ├── types/                  # TypeScript type definitions
+│   └── styles/                 # Global styles and themes
+├── public/                     # Static assets
+├── scripts/                    # Build and utility scripts
+└── docs/                       # Documentation
 ```
 
 ## ✨ Features
@@ -120,26 +120,26 @@ npm run type-check   # Run TypeScript type checking
 ```
 src/
 ├── app/                        # Next.js App Router
-│   ├── layout.tsx             # Root layout with providers
-│   ├── page.tsx               # Home page
-│   └── providers.tsx          # React Query and other providers
+│   ├── layout.tsx              # Root layout with providers
+│   ├── page.tsx                # Home page
+│   └── providers.tsx           # React Query and other providers
 ├── components/                 # Shared UI components
-│   ├── ui/                    # Base UI components (buttons, cards, etc.)
-│   ├── layout/                # Layout components (header, footer, etc.)
-│   └── performance/           # Performance optimization components
-├── features/                  # Feature-based modules
-│   └── properties/            # Property-related features
-│       ├── components/        # Property-specific components
-│       ├── hooks/            # Property-related hooks
-│       └── types/            # Property type definitions
-├── hooks/                     # Custom React hooks
-│   ├── useLanguage.ts         # Internationalization hook
-│   └── useLookupData.ts       # Data fetching hooks
-├── lib/                       # Utilities and configurations
-│   ├── api/                  # API client and endpoints
-│   ├── utils/                # Utility functions
-│   └── constants/            # Application constants
-└── types/                     # TypeScript type definitions
+│   ├── ui/                     # Base UI components (buttons, cards, etc.)
+│   ├── layout/                 # Layout components (header, footer, etc.)
+│   └── performance/            # Performance optimization components
+├── features/                   # Feature-based modules
+│   └── properties/             # Property-related features
+│       ├── components/         # Property-specific components
+│       ├── hooks/              # Property-related hooks
+│       └── types/              # Property type definitions
+├── hooks/                      # Custom React hooks
+│   ├── useLanguage.ts          # Internationalization hook
+│   └── useLookupData.ts        # Data fetching hooks
+├── lib/                        # Utilities and configurations
+│   ├── api/                    # API client and endpoints
+│   ├── utils/                  # Utility functions
+│   └── constants/              # Application constants
+└── types/                      # TypeScript type definitions
 ```
 
 ### Performance Optimizations
