@@ -5,7 +5,14 @@ import { getPublicProperties } from "@/lib/api/properties";
 import { ImageCarousel } from "@/features/properties/components/property-card/image-carousel";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Badge } from "@/components/ui/badge";
-import { useLookupData } from "@/hooks/useLookupData";
+import {
+  useFeatures,
+  useCities,
+  useRegions,
+  usePropertyTypes,
+  useNeighborhoods,
+  useListingTypes,
+} from "@/hooks/useLookupData";
 import { formatNumber } from "@/lib/utils";
 import {
   MapPin,
@@ -23,14 +30,52 @@ const MapModal = dynamic(() => import("./property-map-modal"), { ssr: false });
 
 export function PropertyDetailContent({ propertyId }: { propertyId: number }) {
   const { t, currentLanguage } = useLanguage();
-  const {
-    getFeatureName,
-    getCityName,
-    getRegionName,
-    getPropertyTypeName,
-    getNeighborhoodName,
-    getListingTypeName,
-  } = useLookupData();
+
+  // Only load the specific lookup data needed for this component
+  const { data: features = [] } = useFeatures();
+  const { data: cities = [] } = useCities();
+  const { data: regions = [] } = useRegions();
+  const { data: propertyTypes = [] } = usePropertyTypes();
+  const { data: neighborhoods = [] } = useNeighborhoods();
+  const { data: listingTypes = [] } = useListingTypes();
+
+  // Helper function to get name based on current language
+  const getName = (item: any) => {
+    if (!item) return "";
+    return currentLanguage === "ar" ? item.nameAr : item.nameEn;
+  };
+
+  // Helper functions for getting names by ID
+  const getFeatureName = (id: number) => {
+    const item = features.find((item) => item.id === id);
+    return getName(item);
+  };
+
+  const getCityName = (id: number) => {
+    const item = cities.find((item) => item.id === id);
+    return getName(item);
+  };
+
+  const getRegionName = (id: number) => {
+    const item = regions.find((item) => item.id === id);
+    return getName(item);
+  };
+
+  const getPropertyTypeName = (id: number) => {
+    const item = propertyTypes.find((item) => item.id === id);
+    return getName(item);
+  };
+
+  const getNeighborhoodName = (id: number) => {
+    const item = neighborhoods.find((item) => item.id === id);
+    return getName(item);
+  };
+
+  const getListingTypeName = (id: number) => {
+    const item = listingTypes.find((item) => item.id === id);
+    return getName(item);
+  };
+
   const propertyFromContext = usePropertyFromContext(propertyId);
   const [property, setProperty] = useState(propertyFromContext);
   const [loading, setLoading] = useState(!propertyFromContext);

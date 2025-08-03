@@ -1,5 +1,6 @@
 import { MapPin } from "lucide-react";
-import { useLookupData } from "@/hooks/useLookupData";
+import { useCities, useNeighborhoods } from "@/hooks/useLookupData";
+import { useLanguage } from "@/hooks/useLanguage";
 import type { Property } from "@/types/property";
 
 interface PropertyHeaderProps {
@@ -7,7 +8,25 @@ interface PropertyHeaderProps {
 }
 
 export function PropertyHeader({ property }: PropertyHeaderProps) {
-  const { getCityName, getNeighborhoodName } = useLookupData();
+  const { currentLanguage } = useLanguage();
+  const { data: cities = [] } = useCities();
+  const { data: neighborhoods = [] } = useNeighborhoods();
+
+  // Helper function to get name based on current language
+  const getName = (item: any) => {
+    if (!item) return "";
+    return currentLanguage === "ar" ? item.nameAr : item.nameEn;
+  };
+
+  const getCityName = (id: number) => {
+    const item = cities.find((item) => item.id === id);
+    return getName(item);
+  };
+
+  const getNeighborhoodName = (id: number) => {
+    const item = neighborhoods.find((item) => item.id === id);
+    return getName(item);
+  };
 
   return (
     <div className="mb-3">

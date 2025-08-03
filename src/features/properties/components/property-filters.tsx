@@ -1,7 +1,11 @@
 "use client";
 
 import { useLanguage } from "@/hooks/useLanguage";
-import { useLookupData } from "@/hooks/useLookupData";
+import {
+  useRegions,
+  usePropertyTypes,
+  useListingTypes,
+} from "@/hooks/useLookupData";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -27,17 +31,25 @@ export function PropertyFiltersComponent({
   onFiltersChange,
 }: PropertyFiltersProps) {
   const { t, currentLanguage } = useLanguage();
+
+  // Only load the specific data needed for filters
   const {
-    regions,
-    listingTypes,
-    propertyTypes,
-    regionsLoading,
-    regionsError,
-    listingTypesLoading,
-    listingTypesError,
-    propertyTypesLoading,
-    propertyTypesError,
-  } = useLookupData();
+    data: regions = [],
+    isLoading: regionsLoading,
+    error: regionsError,
+  } = useRegions();
+
+  const {
+    data: listingTypes = [],
+    isLoading: listingTypesLoading,
+    error: listingTypesError,
+  } = useListingTypes();
+
+  const {
+    data: propertyTypes = [],
+    isLoading: propertyTypesLoading,
+    error: propertyTypesError,
+  } = usePropertyTypes();
 
   const handleFilterChange = (
     key: keyof PropertyFilters,
@@ -102,57 +114,87 @@ export function PropertyFiltersComponent({
     );
   };
 
-  // Filter valid data arrays
+  // Check if any data is still loading
+  const isLoading =
+    regionsLoading || listingTypesLoading || propertyTypesLoading;
+
+  // Check if any data has errors
+  const hasErrors = regionsError || listingTypesError || propertyTypesError;
+
+  if (isLoading) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            {t("property.filters")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-950"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (hasErrors) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            {t("property.filters")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-red-600">
+            {t("property.errorLoadingFilters") || "حدث خطأ في تحميل الفلاتر"}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const validRegions = filterValidItems(regions);
   const validListingTypes = filterValidItems(listingTypes);
   const validPropertyTypes = filterValidItems(propertyTypes);
 
   return (
-    <Card className="sticky top-4">
-      <CardHeader className="pb-4">
+    <Card className="w-full">
+      <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold text-blue-950 flex items-center gap-2">
-            <Filter className="w-5 h-5" />
-            {t("filters.title")}
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            {t("property.filters")}
           </CardTitle>
           {hasActiveFilters && (
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={handleClearFilters}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="flex items-center gap-1"
             >
-              <X className="w-4 h-4" />
+              <X className="h-4 w-4" />
+              {t("property.clearFilters")}
             </Button>
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         {/* Region Filter */}
         <div className="space-y-2">
-          <Label htmlFor="region" className="text-sm font-medium text-gray-700">
-            {t("filters.region")}
-          </Label>
+          <Label htmlFor="region-filter">{t("property.region")}</Label>
           <Select
             value={filters.regionId?.toString() || "all"}
             onValueChange={(value) => handleFilterChange("regionId", value)}
-            disabled={regionsLoading}
           >
-            <SelectTrigger>
-              <SelectValue
-                placeholder={
-                  regionsLoading
-                    ? "جاري التحميل..."
-                    : regionsError
-                    ? "خطأ في التحميل"
-                    : validRegions.length === 0
-                    ? "لا توجد بيانات"
-                    : t("filters.selectRegion")
-                }
-              />
+            <SelectTrigger id="region-filter">
+              <SelectValue placeholder={t("property.selectRegion")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("filters.allRegions")}</SelectItem>
+              <SelectItem value="all">{t("property.allRegions")}</SelectItem>
               {validRegions.map((region) => (
                 <SelectItem key={region.id} value={region.id.toString()}>
                   {currentLanguage === "ar" ? region.nameAr : region.nameEn}
@@ -160,215 +202,97 @@ export function PropertyFiltersComponent({
               ))}
             </SelectContent>
           </Select>
-          {regionsError && (
-            <p className="text-xs text-red-500">خطأ في تحميل المناطق</p>
-          )}
-          {regionsLoading && (
-            <p className="text-xs text-blue-500">جاري تحميل المناطق...</p>
-          )}
         </div>
 
         <Separator />
 
         {/* Listing Type Filter */}
         <div className="space-y-2">
-          <Label
-            htmlFor="listingType"
-            className="text-sm font-medium text-gray-700"
-          >
-            {t("filters.listingType")}
+          <Label htmlFor="listing-type-filter">
+            {t("property.listingType")}
           </Label>
           <Select
             value={filters.listingType || "all"}
             onValueChange={(value) => handleFilterChange("listingType", value)}
-            disabled={listingTypesLoading}
           >
-            <SelectTrigger>
-              <SelectValue
-                placeholder={
-                  listingTypesLoading
-                    ? "جاري التحميل..."
-                    : listingTypesError
-                    ? "خطأ في التحميل"
-                    : validListingTypes.length === 0
-                    ? "لا توجد بيانات"
-                    : t("filters.selectListingType")
-                }
-              />
+            <SelectTrigger id="listing-type-filter">
+              <SelectValue placeholder={t("property.selectListingType")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("filters.allTypes")}</SelectItem>
-              {validListingTypes.map((type) => (
-                <SelectItem key={type.id} value={type.id.toString()}>
-                  {currentLanguage === "ar" ? type.nameAr : type.nameEn}
+              <SelectItem value="all">
+                {t("property.allListingTypes")}
+              </SelectItem>
+              {validListingTypes.map((listingType) => (
+                <SelectItem
+                  key={listingType.id}
+                  value={listingType.id.toString()}
+                >
+                  {currentLanguage === "ar"
+                    ? listingType.nameAr
+                    : listingType.nameEn}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {listingTypesError && (
-            <p className="text-xs text-red-500">خطأ في تحميل أنواع الإعلانات</p>
-          )}
-          {listingTypesLoading && (
-            <p className="text-xs text-blue-500">
-              جاري تحميل أنواع الإعلانات...
-            </p>
-          )}
         </div>
 
         <Separator />
 
         {/* Property Type Filter */}
         <div className="space-y-2">
-          <Label
-            htmlFor="propertyType"
-            className="text-sm font-medium text-gray-700"
-          >
-            {t("filters.propertyType")}
+          <Label htmlFor="property-type-filter">
+            {t("property.propertyType")}
           </Label>
           <Select
             value={filters.propertyType?.toString() || "all"}
             onValueChange={(value) => handleFilterChange("propertyType", value)}
-            disabled={propertyTypesLoading}
           >
-            <SelectTrigger>
-              <SelectValue
-                placeholder={
-                  propertyTypesLoading
-                    ? "جاري التحميل..."
-                    : propertyTypesError
-                    ? "خطأ في التحميل"
-                    : validPropertyTypes.length === 0
-                    ? "لا توجد بيانات"
-                    : t("filters.selectPropertyType")
-                }
-              />
+            <SelectTrigger id="property-type-filter">
+              <SelectValue placeholder={t("property.selectPropertyType")} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">
-                {t("filters.allPropertyTypes")}
+                {t("property.allPropertyTypes")}
               </SelectItem>
-              {validPropertyTypes.map((type) => (
-                <SelectItem key={type.id} value={type.id.toString()}>
-                  {currentLanguage === "ar" ? type.nameAr : type.nameEn}
+              {validPropertyTypes.map((propertyType) => (
+                <SelectItem
+                  key={propertyType.id}
+                  value={propertyType.id.toString()}
+                >
+                  {currentLanguage === "ar"
+                    ? propertyType.nameAr
+                    : propertyType.nameEn}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {propertyTypesError && (
-            <p className="text-xs text-red-500">
-              {t("filters.errorLoadingPropertyTypes")}
-            </p>
-          )}
-          {propertyTypesLoading && (
-            <p className="text-xs text-blue-500">
-              {t("filters.loadingPropertyTypes")}
-            </p>
-          )}
         </div>
 
         <Separator />
 
-        {/* Price Range Filter */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium text-gray-700">
-            {t("filters.priceRange")}
-          </Label>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label htmlFor="minPrice" className="text-xs text-gray-500">
-                {t("filters.minPrice")}
-              </Label>
-              <Input
-                id="minPrice"
-                type="number"
-                placeholder="0"
-                value={filters.minPrice || ""}
-                onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                className="text-sm"
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="maxPrice" className="text-xs text-gray-500">
-                {t("filters.maxPrice")}
-              </Label>
-              <Input
-                id="maxPrice"
-                type="number"
-                placeholder="∞"
-                value={filters.maxPrice || ""}
-                onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-                className="text-sm"
-              />
-            </div>
+        {/* Price Range Filters */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="min-price">{t("property.minPrice")}</Label>
+            <Input
+              id="min-price"
+              type="number"
+              placeholder={t("property.minPricePlaceholder")}
+              value={filters.minPrice?.toString() || ""}
+              onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="max-price">{t("property.maxPrice")}</Label>
+            <Input
+              id="max-price"
+              type="number"
+              placeholder={t("property.maxPricePlaceholder")}
+              value={filters.maxPrice?.toString() || ""}
+              onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+            />
           </div>
         </div>
-
-        {/* Clear Filters Button */}
-        {hasActiveFilters && (
-          <div className="pt-4">
-            <Button
-              variant="outline"
-              onClick={handleClearFilters}
-              className="w-full bg-transparent"
-              size="sm"
-            >
-              {t("filters.clearFilters")}
-            </Button>
-          </div>
-        )}
-
-        {/* Active Filters Summary */}
-        {hasActiveFilters && (
-          <div className="pt-4 border-t">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
-              {t("filters.activeFilters")}:
-            </h4>
-            <div className="space-y-1">
-              {filters.regionId && (
-                <div className="text-xs text-gray-600">
-                  {t("filters.region")}:{" "}
-                  {
-                    validRegions.find((r) => r.id === filters.regionId)?.[
-                      currentLanguage === "ar" ? "nameAr" : "nameEn"
-                    ]
-                  }
-                </div>
-              )}
-              {filters.listingType && filters.listingType !== "all" && (
-                <div className="text-xs text-gray-600">
-                  {t("filters.listingType")}:{" "}
-                  {(() => {
-                    const listingTypeId = Number.parseInt(filters.listingType);
-                    const listingType = validListingTypes.find(
-                      (t) => t.id === listingTypeId
-                    );
-                    return (
-                      listingType?.[
-                        currentLanguage === "ar" ? "nameAr" : "nameEn"
-                      ] || filters.listingType
-                    );
-                  })()}
-                </div>
-              )}
-              {filters.propertyType && (
-                <div className="text-xs text-gray-600">
-                  {t("filters.propertyType")}:{" "}
-                  {
-                    validPropertyTypes.find(
-                      (t) => t.id === filters.propertyType
-                    )?.[currentLanguage === "ar" ? "nameAr" : "nameEn"]
-                  }
-                </div>
-              )}
-              {(filters.minPrice || filters.maxPrice) && (
-                <div className="text-xs text-gray-600">
-                  {t("filters.priceRange")}: {filters.minPrice || 0} -{" "}
-                  {filters.maxPrice || "∞"} {t("common.currency")}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "set PORT=5173 && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "performance": "node scripts/performance-monitor.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

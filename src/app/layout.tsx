@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Providers } from "./providers";
+import { LookupPreloader } from "@/components/performance/lookup-preloader";
 
 const cairoFont = Cairo({ subsets: ["arabic", "latin"] });
 
@@ -116,6 +117,7 @@ export default function RootLayout({
         className={`${cairoFont.className} antialiased min-h-screen flex flex-col`}
       >
         <Providers>
+          <LookupPreloader />
           <Header />
           <main className="flex-1 flex flex-col">{children}</main>
           <Footer />
